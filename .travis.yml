@@ -1,27 +1,26 @@
 sudo: required
 
-language: node_js
+dist: trusty
 
-node_js:
-  - "9"
+language: java
 
-services:
-  - docker
+addons:
+  apt:
+    packages:
+      - openjdk-8-jdk
 
-before_install:
-  - echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ wheezy main" | sudo tee /etc/apt/sources.list.d/azure-cli.list
-  - curl -L https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
-  - sudo apt-get install -y apt-transport-https
-  - sudo apt-get update && sudo apt-get install -y azure-cli openjdk-8-jdk
-  - npm i -g azure-functions-core-tools --unsafe-perm true
-  - az login --service-principal --username "$AZ_SP_NAME" --password "$AZ_SP_PASSWORD" --tenant "$AZ_TENANT_ID"
-  - az account set --subscription "$AZ_SUBSCRIPTION"
+jdk: openjdk8
+
+cache:
+  directories:
+    - $HOME/.m2
 
 script:
-  - mvn clean package
+  - ./mvnw clean package
 
 deploy:
   provider: script
-  script: mvn azure-functions:deploy
+  skip_cleanup: true
+  script: "cp .travis.settings.xml $HOME/.m2/settings.xml && ./mvnw azure-functions:deploy"
   on:
     branch: master

@@ -28,6 +28,7 @@
         <functionResourceGroup>YaCoVi_rg</functionResourceGroup>
         <nimbus-jose-jwt.version>6.7</nimbus-jose-jwt.version>
         <jersey.version>2.25.1</jersey.version>
+        <functionAppSubscriptionId>eec1832e-05fe-4bf8-80db-28f4f0de9d57</functionAppSubscriptionId>
     </properties>
 
     <repositories>
@@ -153,6 +154,10 @@
                     <resourceGroup>${functionResourceGroup}</resourceGroup>
                     <appName>${functionAppName}</appName>
                     <region>${functionAppRegion}</region>
+                    <subscriptionId>${functionAppSubscriptionId}</subscriptionId>
+                    <authentication>
+                        <serverId>azure-auth</serverId>
+                    </authentication>
                     <appSettings>
                         <!-- Run Azure Function from package file by default -->
                         <property>
