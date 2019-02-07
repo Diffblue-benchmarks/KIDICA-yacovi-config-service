@@ -1,4 +1,9 @@
-  <h3>YaCoVi Config Service</h3>
+  <h1>YaCoVi Config Service</h1>
+  <p>
+    <a href="https://travis-ci.com/KIDICA/yacovi-config-service" name="YaCoVi Config Service Builds" target="_blank">
+      <img src="https://travis-ci.com/KIDICA/yacovi-config-service.svg?branch=master" alt="TravisCi Build Status" />
+    </a>
+  </p>
   <p>
     Configuration Service for the <a href='https://github.com/KIDICA/yacovi-web' target='_blank'>YaCoVi</a> web application. This service is designed as a serverless function and is operated on the <a href='https://docs.microsoft.com/en-us/azure/azure-functions/' target='_blank'>Azure Function</a> platform.
     <br>
