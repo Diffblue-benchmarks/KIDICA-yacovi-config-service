@@ -1,11 +1,10 @@
-package com.kiongroup.dc.functions.yacovi.core.mixins;
+package com.kiongroup.dc.functions.core.mixin;
 
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
-import com.kiongroup.dc.functions.yacovi.core.mixin.AuthenticationMixin;
-import java.text.ParseException;
 import org.junit.Test;
+
+import com.kiongroup.dc.function.core.mixin.AuthenticationMixin;
 
 
 /**
