@@ -1,13 +1,11 @@
 package com.kiongroup.dc.function.search;
 
-import static com.kiongroup.dc.function.search.Constants.GOOGLE_SEARCH_URL;
-import static com.kiongroup.dc.function.search.Constants.REGEX_NON_ASCII_CHARS;
-import static com.kiongroup.dc.function.search.Constants.RESULT_COUNT;
-import static com.kiongroup.dc.function.search.Constants.USER_AGENT;
+import static com.kiongroup.dc.function.search.Constants.*;
 import static java.util.stream.Collectors.toList;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.jsoup.Jsoup;
@@ -19,29 +17,39 @@ import org.jsoup.select.Elements;
 public class GoogleReferenceSearcher {
 
 	private static String buildGoogleSearchUrl(String searchTerm) throws UnsupportedEncodingException {
-		return GOOGLE_SEARCH_URL + "?q=" + searchTerm + "&num=" + RESULT_COUNT;
+		return BING_SEARCH_URL + "?q=" + searchTerm;
 	}
 
-	private static Elements extractSearchResultChildren(Document document) {
-
-		Elements parents = document.select("[data-attrid^='kc:/']").select("[data-attrid$='sideways']");
-
-		if (parents.isEmpty()) {
-			return new Elements();
-		}
-
-		return parents.first().children().select("[data-reltype='sideways']");
+	private static String buildReferenceSearchUrl(String appendix) {
+		return BING_URL + appendix;
 	}
 
-	private static String extractDataContent(Element element) {
+	private static String getReferenceSearchUrl(Document document) {
+		Element referenceHeadingClickable = document.selectFirst(".b_entityTP").select(".b_subModule").last().selectFirst(".b_moreLink");
 
-		Elements children = element.children().select("div[data-original-name]");
+		System.out.println(referenceHeadingClickable);
 
-		if (children.isEmpty()) {
+		if (referenceHeadingClickable == null) {
 			return "";
 		}
 
-		return children.first().attr("data-original-name");
+		return referenceHeadingClickable.attr("href");
+	}
+
+	private static List<Element> extractSearchResultChildren(Document document) {
+		List<Element> elements = document.select(".carousel-content a.cardToggle").subList(0, RESULT_COUNT);
+
+		System.out.println("Found " + elements.size() + " references!");
+
+		if (elements.isEmpty()) {
+			return new Elements();
+		}
+
+		return elements;
+	}
+
+	private static String extractDataContent(Element element) {
+		return element.attr("title");
 	}
 
 	private static String removeNonAsciiCharacters(String input) {
@@ -49,12 +57,23 @@ public class GoogleReferenceSearcher {
 	}
 
 	public static List<String> googleSearchReferencesFor(String searchTerm) throws IOException {
+		System.out.println("Searching bing for " + searchTerm);
 		Document document = Jsoup.connect(buildGoogleSearchUrl(searchTerm)).userAgent(USER_AGENT).get();
-		return extractSearchResultChildren(document)
+		String referenceUrl = getReferenceSearchUrl(document);
+		System.out.println("Reference Url: " + referenceUrl);
+		if (referenceUrl.isEmpty()) {
+			return new ArrayList<>();
+		}
+		String googleReferenceUrl = buildReferenceSearchUrl(referenceUrl);
+		System.out.println(googleReferenceUrl);
+
+		Document referenceDocument = Jsoup.connect(googleReferenceUrl).userAgent(USER_AGENT).get();
+
+		return extractSearchResultChildren(referenceDocument)
 				.stream()
-				.map(child -> extractDataContent(child))
+				.map(GoogleReferenceSearcher::extractDataContent)
 				.filter(data -> !StringUtil.isBlank(data))
-				.map(data -> removeNonAsciiCharacters(data))
+				.map(GoogleReferenceSearcher::removeNonAsciiCharacters)
 				.collect(toList());
 	}
 }
