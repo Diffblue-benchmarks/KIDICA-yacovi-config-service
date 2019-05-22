@@ -5,6 +5,7 @@ import static org.junit.Assert.assertTrue;
 import java.io.IOException;
 import java.util.List;
 
+import com.kiongroup.dc.function.core.model.SearchResult;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -23,14 +24,14 @@ public class SearchIntegrationTest {
 	}
 	
 	private void executeSearch(String searchTerm) throws IOException {
-		for (String result : GoogleReferenceSearcher.googleSearchReferencesFor(searchTerm)) {
-			System.out.printf("'%s' references to '%s' \n", searchTerm, result);
+		for (SearchResult result : GoogleReferenceSearcher.googleSearchReferencesFor(searchTerm)) {
+			System.out.printf("'%s' references to '%s' \n", searchTerm, result.getReferenceTitle());
 		}
 	}
 	
 	@Test
 	public void noResults() throws IOException {
-		List<String> results = GoogleReferenceSearcher.googleSearchReferencesFor("bräd pütt");
+		List<SearchResult> results = GoogleReferenceSearcher.googleSearchReferencesFor("bräd pütt");
 		assertTrue(results.isEmpty());
 	}
 }

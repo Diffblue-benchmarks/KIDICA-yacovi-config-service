@@ -5,7 +5,9 @@ import static com.microsoft.azure.functions.HttpStatus.BAD_REQUEST;
 import static com.microsoft.azure.functions.annotation.AuthorizationLevel.ANONYMOUS;
 
 import java.util.List;
+import java.util.Map;
 
+import com.kiongroup.dc.function.core.model.SearchResult;
 import org.jsoup.helper.StringUtil;
 
 import com.kiongroup.dc.function.search.GoogleReferenceSearcher;
@@ -27,14 +29,13 @@ public class SearchReferenceFunction extends AbstractAuthenticatedFunction {
 
 	@Override
 	protected <T> HttpResponseMessage handleResponseCreation(HttpRequestMessage<T> request) throws Exception {
-		
 		String searchTerm = request.getQueryParameters().get("searchTerm");
 		
 		if (StringUtil.isBlank(searchTerm)) {
 			return errorReponse(request, BAD_REQUEST);
 		}
 
-		List<String> references = GoogleReferenceSearcher.googleSearchReferencesFor(searchTerm);
-		return successResponse(request, new SearchReferencesHttpResponse(references));
+		List<SearchResult> results = GoogleReferenceSearcher.googleSearchReferencesFor(searchTerm);
+		return successResponse(request, new SearchReferencesHttpResponse(results));
 	}
 }
