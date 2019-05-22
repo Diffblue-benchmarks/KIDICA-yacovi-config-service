@@ -24,7 +24,6 @@ public class SearchReferenceFunction extends AbstractAuthenticatedFunction {
 	public HttpResponseMessage searchReferences(
 		@HttpTrigger(name = "req", methods = {GET}, authLevel = ANONYMOUS) HttpRequestMessage<List<String>> request,
 		final ExecutionContext context) {
-		context.getLogger().info("Test");
 		return createResponse(request);
 	}
 
@@ -36,7 +35,7 @@ public class SearchReferenceFunction extends AbstractAuthenticatedFunction {
 			return errorReponse(request, BAD_REQUEST);
 		}
 
-		List<SearchResult> results = GoogleReferenceSearcher.googleSearchReferencesFor(searchTerm);
+		List<SearchResult> results = GoogleReferenceSearcher.getSearchReferencesFor(searchTerm);
 		return successResponse(request, new SearchReferencesHttpResponse(results));
 	}
 }

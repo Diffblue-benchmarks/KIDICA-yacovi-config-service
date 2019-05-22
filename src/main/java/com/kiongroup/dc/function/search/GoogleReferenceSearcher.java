@@ -18,7 +18,7 @@ import org.jsoup.select.Elements;
 
 public class GoogleReferenceSearcher {
 
-	private static String buildGoogleSearchUrl(String searchTerm) throws UnsupportedEncodingException {
+	private static String buildSearchUrl(String searchTerm) throws UnsupportedEncodingException {
 		return BING_SEARCH_URL + "?q=" + searchTerm + "&cc=de";
 	}
 
@@ -61,9 +61,9 @@ public class GoogleReferenceSearcher {
 		return input.setTitle(input.getReferenceTitle().replaceAll(REGEX_NON_ASCII_CHARS, " ").trim());
 	}
 
-	public static List<SearchResult> googleSearchReferencesFor(String searchTerm) throws IOException {
+	public static List<SearchResult> getSearchReferencesFor(String searchTerm) throws IOException {
 		System.out.println("Searching bing for " + searchTerm);
-		Document document = Jsoup.connect(buildGoogleSearchUrl(searchTerm)).userAgent(USER_AGENT).get();
+		Document document = Jsoup.connect(buildSearchUrl(searchTerm)).userAgent(USER_AGENT).get();
 		String referenceUrl = getReferenceSearchUrl(document);
 		if (referenceUrl.isEmpty()) {
 			return new ArrayList<>();
@@ -81,7 +81,7 @@ public class GoogleReferenceSearcher {
 	}
 
 	public static String getImage(String searchTerm) throws IOException {
-		Document document = Jsoup.connect(buildGoogleSearchUrl(searchTerm)).userAgent(USER_AGENT).get();
+		Document document = Jsoup.connect(buildSearchUrl(searchTerm)).userAgent(USER_AGENT).get();
 
 		try {
 			Element referenceHeadingClickable = document.selectFirst(".b_entityTP").selectFirst(".b_float_img").selectFirst(".rms_iac");
