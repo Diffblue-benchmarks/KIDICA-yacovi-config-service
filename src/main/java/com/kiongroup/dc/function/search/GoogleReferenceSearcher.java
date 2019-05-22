@@ -19,7 +19,7 @@ import org.jsoup.select.Elements;
 public class GoogleReferenceSearcher {
 
 	private static String buildGoogleSearchUrl(String searchTerm) throws UnsupportedEncodingException {
-		return BING_SEARCH_URL + "?q=" + searchTerm;
+		return BING_SEARCH_URL + "?q=" + searchTerm + "&cc=de";
 	}
 
 	private static String buildReferenceSearchUrl(String appendix) {
@@ -84,16 +84,13 @@ public class GoogleReferenceSearcher {
 		Document document = Jsoup.connect(buildGoogleSearchUrl(searchTerm)).userAgent(USER_AGENT).get();
 
 		try {
-			Element referenceHeadingClickable = document.selectFirst(".b_entityTP").selectFirst(".b_float_img").selectFirst("img");
-
-			System.out.println(document.selectFirst(".b_entityTP").selectFirst(".b_float_img"));
-			System.out.println(referenceHeadingClickable);
+			Element referenceHeadingClickable = document.selectFirst(".b_entityTP").selectFirst(".b_float_img").selectFirst(".rms_iac");
 
 			if (referenceHeadingClickable == null) {
 				return "";
 			}
 
-			return referenceHeadingClickable.attr("src");
+			return BING_URL + referenceHeadingClickable.attr("data-src");
 		} catch (Exception e) {
 			return "";
 		}
