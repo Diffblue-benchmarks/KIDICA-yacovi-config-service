@@ -25,21 +25,21 @@ public class GoogleReferenceSearcher {
 	}
 
 	private static String getReferenceSearchUrl(Document document) {
-		Element referenceHeadingClickable = document.selectFirst(".b_entityTP").select(".b_subModule").last().selectFirst(".b_moreLink");
+		try {
+			Element referenceHeadingClickable = document.selectFirst(".b_entityTP").select(".b_subModule").last().selectFirst(".b_moreLink");
 
-		System.out.println(referenceHeadingClickable);
+			if (referenceHeadingClickable == null) {
+				return "";
+			}
 
-		if (referenceHeadingClickable == null) {
+			return referenceHeadingClickable.attr("href");
+		} catch (Exception e) {
 			return "";
 		}
-
-		return referenceHeadingClickable.attr("href");
 	}
 
 	private static List<Element> extractSearchResultChildren(Document document) {
 		List<Element> elements = document.select(".carousel-content a.cardToggle").subList(0, RESULT_COUNT);
-
-		System.out.println("Found " + elements.size() + " references!");
 
 		if (elements.isEmpty()) {
 			return new Elements();
@@ -60,12 +60,10 @@ public class GoogleReferenceSearcher {
 		System.out.println("Searching bing for " + searchTerm);
 		Document document = Jsoup.connect(buildGoogleSearchUrl(searchTerm)).userAgent(USER_AGENT).get();
 		String referenceUrl = getReferenceSearchUrl(document);
-		System.out.println("Reference Url: " + referenceUrl);
 		if (referenceUrl.isEmpty()) {
 			return new ArrayList<>();
 		}
 		String googleReferenceUrl = buildReferenceSearchUrl(referenceUrl);
-		System.out.println(googleReferenceUrl);
 
 		Document referenceDocument = Jsoup.connect(googleReferenceUrl).userAgent(USER_AGENT).get();
 

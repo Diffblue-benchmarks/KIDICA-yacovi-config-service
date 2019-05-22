@@ -33,7 +33,7 @@ public class SearchReferenceFunction extends AbstractAuthenticatedFunction {
 		if (StringUtil.isBlank(searchTerm)) {
 			return errorReponse(request, BAD_REQUEST);
 		}
-		
+
 		List<String> references = GoogleReferenceSearcher.googleSearchReferencesFor(searchTerm);
 		return successResponse(request, new SearchReferencesHttpResponse(references));
 	}
