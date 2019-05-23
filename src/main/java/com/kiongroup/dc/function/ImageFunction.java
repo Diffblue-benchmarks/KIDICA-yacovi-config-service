@@ -32,7 +32,7 @@ public class ImageFunction extends AbstractAuthenticatedFunction {
         String searchTerm = request.getQueryParameters().get("searchTerm");
 
         if (StringUtil.isBlank(searchTerm)) {
-            return errorReponse(request, BAD_REQUEST);
+            return errorReponse(request, BAD_REQUEST, new UnsupportedOperationException("SearchTerm cannot be blank."));
         }
 
         String result = GoogleReferenceSearcher.getImage(searchTerm);

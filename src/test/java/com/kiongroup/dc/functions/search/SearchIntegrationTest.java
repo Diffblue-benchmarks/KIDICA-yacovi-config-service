@@ -24,14 +24,14 @@ public class SearchIntegrationTest {
 	}
 	
 	private void executeSearch(String searchTerm) throws IOException {
-		for (SearchResult result : GoogleReferenceSearcher.googleSearchReferencesFor(searchTerm)) {
+		for (SearchResult result : GoogleReferenceSearcher.getSearchReferencesFor(searchTerm)) {
 			System.out.printf("'%s' references to '%s' \n", searchTerm, result.getReferenceTitle());
 		}
 	}
 	
 	@Test
 	public void noResults() throws IOException {
-		List<SearchResult> results = GoogleReferenceSearcher.googleSearchReferencesFor("bräd pütt");
+		List<SearchResult> results = GoogleReferenceSearcher.getSearchReferencesFor("bräd pütt");
 		assertTrue(results.isEmpty());
 	}
 }

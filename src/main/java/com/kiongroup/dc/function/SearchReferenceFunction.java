@@ -6,7 +6,6 @@ import static com.microsoft.azure.functions.HttpStatus.OK;
 import static com.microsoft.azure.functions.annotation.AuthorizationLevel.ANONYMOUS;
 
 import java.util.List;
-import java.util.Map;
 
 import com.kiongroup.dc.function.core.model.SearchResult;
 import org.jsoup.helper.StringUtil;
@@ -25,9 +24,9 @@ public class SearchReferenceFunction extends AbstractAuthenticatedFunction {
 	public HttpResponseMessage searchReferences(
 		@HttpTrigger(name = "req", methods = {GET}, authLevel = ANONYMOUS) HttpRequestMessage<List<String>> request,
 		final ExecutionContext context) {
-		return request.createResponseBuilder(OK).body("Test").build();
+		// return request.createResponseBuilder(OK).body("Test").build();
 
-		//return createResponse(request);
+		return createResponse(request);
 	}
 
 	@Override
