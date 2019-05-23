@@ -28,7 +28,7 @@ public abstract class AbstractAuthenticatedFunction implements AuthenticationMix
 		return request
 				.createResponseBuilder(status)
 				.header(CONTENT_TYPE, APPLICATION_JSON)
-				.body(new HttpErrorResponse("#1: " + e.getMessage()).toJson())
+				.body(new HttpErrorResponse("#1: " + ExceptionUtils.exceptionStackTraceAsString(e)).toJson())
 				.build();
 	}
 	
