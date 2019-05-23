@@ -2,6 +2,7 @@ package com.kiongroup.dc.function;
 
 import static com.microsoft.azure.functions.HttpMethod.GET;
 import static com.microsoft.azure.functions.HttpStatus.BAD_REQUEST;
+import static com.microsoft.azure.functions.HttpStatus.OK;
 import static com.microsoft.azure.functions.annotation.AuthorizationLevel.ANONYMOUS;
 
 import java.util.List;
@@ -24,7 +25,9 @@ public class SearchReferenceFunction extends AbstractAuthenticatedFunction {
 	public HttpResponseMessage searchReferences(
 		@HttpTrigger(name = "req", methods = {GET}, authLevel = ANONYMOUS) HttpRequestMessage<List<String>> request,
 		final ExecutionContext context) {
-		return createResponse(request);
+		return request.createResponseBuilder(OK).body("Test").build();
+
+		//return createResponse(request);
 	}
 
 	@Override
@@ -32,7 +35,7 @@ public class SearchReferenceFunction extends AbstractAuthenticatedFunction {
 		String searchTerm = request.getQueryParameters().get("searchTerm");
 		
 		if (StringUtil.isBlank(searchTerm)) {
-			return errorReponse(request, BAD_REQUEST);
+			return errorReponse(request, BAD_REQUEST, new UnsupportedOperationException("SearchTerm can't be empty"));
 		}
 
 		List<SearchResult> results = GoogleReferenceSearcher.getSearchReferencesFor(searchTerm);
