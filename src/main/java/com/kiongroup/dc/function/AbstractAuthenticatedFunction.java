@@ -6,6 +6,7 @@ import static com.microsoft.azure.functions.HttpStatus.UNAUTHORIZED;
 import static javax.ws.rs.core.HttpHeaders.CONTENT_TYPE;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
+import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.core.HttpHeaders;
 
 import com.kiongroup.dc.function.core.mixin.AuthenticationMixin;
@@ -27,7 +28,7 @@ public abstract class AbstractAuthenticatedFunction implements AuthenticationMix
 		return request
 				.createResponseBuilder(status)
 				.header(CONTENT_TYPE, APPLICATION_JSON)
-				.body(new HttpErrorResponse(ExceptionUtils.exceptionStackTraceAsString(e)).toJson())
+				.body(new HttpErrorResponse("#1: " + e.getMessage()).toJson())
 				.build();
 	}
 	
@@ -42,7 +43,7 @@ public abstract class AbstractAuthenticatedFunction implements AuthenticationMix
 	protected <T> HttpResponseMessage createResponse(HttpRequestMessage<T> request) {
 		
 		if (!isAuthenticated(request)) {
-			return errorReponse(request, UNAUTHORIZED, null);
+			return errorReponse(request, UNAUTHORIZED, new NotAuthorizedException("Unauthorized."));
 		}
 
 		try {
