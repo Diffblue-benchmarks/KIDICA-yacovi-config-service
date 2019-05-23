@@ -24,8 +24,6 @@ public class SearchReferenceFunction extends AbstractAuthenticatedFunction {
 	public HttpResponseMessage searchReferences(
 		@HttpTrigger(name = "req", methods = {GET}, authLevel = ANONYMOUS) HttpRequestMessage<List<String>> request,
 		final ExecutionContext context) {
-		// return request.createResponseBuilder(OK).body("Test").build();
-
 		return createResponse(request);
 	}
 

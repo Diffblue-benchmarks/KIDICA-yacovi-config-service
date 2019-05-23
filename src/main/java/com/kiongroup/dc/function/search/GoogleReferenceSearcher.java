@@ -41,11 +41,19 @@ public class GoogleReferenceSearcher {
 	}
 
 	private static List<Element> extractSearchResultChildren(Document document) {
-		List<Element> elements = document.select(".carousel-content a.cardToggle").subList(0, RESULT_COUNT);
+		List<Element> elements = document.select(".carousel-content a.cardToggle");
 
 		if (elements.isEmpty()) {
-			return new Elements();
+			return new ArrayList<>();
 		}
+
+
+		int count = RESULT_COUNT;
+		if (elements.size() <= count) {
+			count = elements.size();
+		}
+
+		elements = elements.subList(0, count);
 
 		return elements;
 	}
