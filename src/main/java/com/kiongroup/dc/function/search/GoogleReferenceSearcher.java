@@ -18,15 +18,15 @@ import org.jsoup.select.Elements;
 
 public class GoogleReferenceSearcher {
 
-	public static String buildSearchUrl(String searchTerm) throws UnsupportedEncodingException {
+	private static String buildSearchUrl(String searchTerm) {
 		return BING_SEARCH_URL + "?q=" + searchTerm + "&cc=de";
 	}
 
-	public static String buildReferenceSearchUrl(String appendix) {
-		return BING_URL + appendix;
+	private static String buildReferenceSearchUrl(String appendix) {
+		return BING_URL + appendix + "&cc=de";
 	}
 
-	public static String getReferenceSearchUrl(Document document) {
+	private static String getReferenceSearchUrl(Document document) {
 		try {
 			Element referenceHeadingClickable = document.selectFirst(".b_entityTP").select(".b_subModule").last().selectFirst(".b_moreLink");
 
@@ -40,7 +40,7 @@ public class GoogleReferenceSearcher {
 		}
 	}
 
-	public static List<Element> extractSearchResultChildren(Document document) {
+	private static List<Element> extractSearchResultChildren(Document document) {
 		List<Element> elements = document.select(".carousel-content a.cardToggle");
 
 		if (elements.isEmpty()) {
@@ -58,7 +58,7 @@ public class GoogleReferenceSearcher {
 		return elements;
 	}
 
-	public static SearchResult extractDataContent(Element element) {
+	private static SearchResult extractDataContent(Element element) {
 		String result = element.attr("title");
 		String image = BING_URL + element.selectFirst("img").attr("src");
 
